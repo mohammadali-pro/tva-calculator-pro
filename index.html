@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .calculator {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 70%;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        table th {
+            background: #4CAF50;
+            color: white;
+        }
+        table tr:last-child td {
+            font-weight: bold;
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h2>TVA Calculator</h2>
+<div class="calculator">
+    <label>Enter table values (comma separated):</label>
+    <input type="text" id="numbersInput" placeholder="e.g. 5000000, 12000000, 8000000">
+    <button onclick="calculateTVA()">Calculate</button>
+</div>
+
+<div id="results"></div>
+
+<script>
+function calculateTVA() {
+    const input = document.getElementById("numbersInput").value.trim();
+    if (input === "") {
+        alert("Please enter at least one number.");
+        return;
+    }
+
+    // Split input by commas, trim, and convert to numbers
+    const numbers = input.split(',').map(num => parseFloat(num.trim())).filter(num => !isNaN(num));
+
+    if (numbers.length === 0) {
+        alert("Please enter valid numbers.");
+        return;
+    }
+
+    let results = [];
+    let sumKeys = 0;
+    let sumTVA = 0;
+
+    numbers.forEach(num => {
+        sumKeys += num;
+        let tva = (num > 9000000) ? 450000 : num * 0.05;
+        sumTVA += tva;
+        results.push({value: num, tva: tva});
+    });
+
+    // Build HTML table
+    let table = '<table>';
+    table += '<tr><th>Input Value</th><th>TVA Value</th></tr>';
+    results.forEach(row => {
+        table += `<tr><td>${row.value.toLocaleString()}</td><td>${row.tva.toLocaleString()}</td></tr>`;
+    });
+    table += `<tr><td>Total: ${sumKeys.toLocaleString()}</td><td>Total TVA: ${sumTVA.toLocaleString()}</td></tr>`;
+    table += '</table>';
+
+    document.getElementById("results").innerHTML = table;
+}
+</script>
+
+</body>
+</html>
